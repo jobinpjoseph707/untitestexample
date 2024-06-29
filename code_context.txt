@@ -1,0 +1,167 @@
+// File: src/app/app.component.html
+<router-outlet></router-outlet>
+// File: src/app/app.component.scss
+
+// File: src/app/app.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { AppComponent } from './app.component';
+
+describe('AppComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AppComponent],
+    }).compileComponents();
+  });
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  it(`should have the 'unit-test' title`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('unit-test');
+  });
+
+  it('should render title', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, unit-test');
+  });
+});
+
+// File: src/app/app.component.ts
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
+})
+export class AppComponent {
+  title = 'unit-test';
+}
+
+// File: src/app/app.config.ts
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+};
+
+// File: src/app/app.routes.ts
+import { Routes } from '@angular/router';
+import { TestformComponent } from './testform/testform.component';
+
+export const routes: Routes = [
+    {
+        path:'',component:TestformComponent
+    }
+
+];
+
+// File: src/app/testform/testform.component.html
+<div>
+    <h1 class="d-flex">Login</h1>
+    <form [formGroup]="login" (ngSubmit)="onsubmit()">
+        <div class="mb-3">
+            <label for="username" class="form-label">username</label>
+            <input type="text" id="username" formControlusername="username" required>
+            <div *ngIf="login.get('username')?.hasError('required')"
+            class="alert alert-danger">
+            Name is required
+            </div>
+            <div *ngIf="login.get('username')?.hasError('minlength')"
+            class="alert alert-danger">
+            minmum 4 charaters is required
+            </div>
+
+
+
+        </div>
+        <div>
+            <label for="password" class="form-label">Password</label>
+            <input type="password" formControlusername="password">
+            <div *ngIf="login.get('password')?.hasError('required')"
+            class="alert alert-danger">
+            Name is required
+            </div>
+            <div *ngIf="login.get('password')?.hasError('minlength')"
+            class="alert alert-danger">
+            minmum 4 charaters is required
+            </div>
+          </div>
+          <button type="submit">submit</button>
+    </form>
+</div>
+// File: src/app/testform/testform.component.scss
+
+// File: src/app/testform/testform.component.spec.ts
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { TestformComponent } from './testform.component';
+
+describe('TestformComponent', () => {
+  let component: TestformComponent;
+  let fixture: ComponentFixture<TestformComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestformComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(TestformComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+// File: src/app/testform/testform.component.ts
+import { NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-testform',
+  standalone: true,
+  imports: [ReactiveFormsModule,NgIf],
+  templateUrl: './testform.component.html',
+  styleUrl: './testform.component.scss'
+})
+export class TestformComponent {
+onsubmit() {
+  console.log(this.login.value);
+  
+
+}
+login!:FormGroup
+
+  // login=new FormGroup({
+  //   username:new FormControl(('')),
+  //   password:new FormControl((''))
+  // });
+  ngOnInit():void{
+
+    this.login=new FormGroup({
+      username:new FormControl('',[Validators.required,Validators.minLength(4)]),
+      password:new FormControl('',[Validators.required,Validators.minLength(8)])
+    });
+
+  }
+
+}
+

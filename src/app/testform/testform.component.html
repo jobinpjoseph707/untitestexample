@@ -1,0 +1,33 @@
+<div>
+    <h1 class="d-flex">Login</h1>
+    <form [formGroup]="login" (ngSubmit)="onsubmit()">
+        <div class="mb-3">
+            <label for="username" class="form-label">username</label>
+            <input type="text" id="username" formControlusername="username" required>
+            <div *ngIf="login.get('username')?.hasError('required')"
+            class="alert alert-danger">
+            Name is required
+            </div>
+            <div *ngIf="login.get('username')?.hasError('minlength')"
+            class="alert alert-danger">
+            minmum 4 charaters is required
+            </div>
+
+
+
+        </div>
+        <div>
+            <label for="password" class="form-label">Password</label>
+            <input type="password" formControlusername="password">
+            <div *ngIf="login.get('password')?.hasError('required')"
+            class="alert alert-danger">
+            Name is required
+            </div>
+            <div *ngIf="login.get('password')?.hasError('minlength')"
+            class="alert alert-danger">
+            minmum 4 charaters is required
+            </div>
+          </div>
+          <button type="submit">submit</button>
+    </form>
+</div>
